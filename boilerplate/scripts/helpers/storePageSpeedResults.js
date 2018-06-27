@@ -1,7 +1,7 @@
-const fs = require('fs-extra');
-const path = require('path');
+const fs = require("fs-extra");
+const path = require("path");
 
-const strategies = ['mobile', 'desktop'];
+const strategies = ["mobile", "desktop"];
 
 /**
  * Format JSON as HTML tables and save
@@ -9,16 +9,16 @@ const strategies = ['mobile', 'desktop'];
 function storePageSpeedResults(results) {
   return new Promise((resolve, reject) => {
     const json = {
-      results,
+      results
     };
-    const basePath = path.join(process.cwd(), 'build', 'web');
+    const basePath = path.join(process.cwd(), "build", "web");
     fs.writeJSON(
-      path.join(basePath, 'page_speed_report.json'),
+      path.join(basePath, "page_speed_report.json"),
       json,
       {
-        spaces: 2,
+        spaces: 2
       },
-      (err) => {
+      err => {
         if (err) {
           reject(err);
         }
@@ -62,8 +62,9 @@ function storePageSpeedResults(results) {
     //   }
     // }
     // step through manually
-    let html = '<!doctype html><html><head><meta charset="UTF-8"><title>PageSpeed Insights'
-      + ' Results</title></head><body>';
+    let html =
+      '<!doctype html><html><head><meta charset="UTF-8"><title>PageSpeed Insights' +
+      " Results</title></head><body>";
     json.results.forEach((result, j) => {
       html += `<h1>${strategies[j]} ${result.title}</h1>`;
       for (const i in result.ruleGroups) {
@@ -76,33 +77,28 @@ function storePageSpeedResults(results) {
       for (const i in result.formattedResults.ruleResults) {
         rules.push(result.formattedResults.ruleResults[i]);
       }
-      rules.sort((a, b) => b.ruleImpact - a.ruleImpact)
-        .forEach((val) => {
-          html += `<h5>${val.localizedRuleName}</h5>`;
-          html += `<p>Rule impact: ${val.ruleImpact} | Rule Category: ${val.groups.join(', ')}</p>`;
-          if (val.summary) {
-            const i = val.summary.format.indexOf('Learn more at');
-            const sum = i > -1
-              ? val.summary.format.slice(0, i)
-              : val.summary.format;
-            html += `<p>${sum}</p>`;
-          }
-        });
+      rules.sort((a, b) => b.ruleImpact - a.ruleImpact).forEach(val => {
+        html += `<h5>${val.localizedRuleName}</h5>`;
+        html += `<p>Rule impact: ${
+          val.ruleImpact
+        } | Rule Category: ${val.groups.join(", ")}</p>`;
+        if (val.summary) {
+          const i = val.summary.format.indexOf("Learn more at");
+          const sum =
+            i > -1 ? val.summary.format.slice(0, i) : val.summary.format;
+          html += `<p>${sum}</p>`;
+        }
+      });
     });
-    html += '</body></html>';
+    html += "</body></html>";
     // const parsedTables = buildTable(results);
-    fs.outputFile(
-      path.join(basePath, 'page_speed_report.html'),
-      html,
-      (err) => {
-        if (err) {
-          reject(err);
-        }
-        else {
-          resolve();
-        }
+    fs.outputFile(path.join(basePath, "page_speed_report.html"), html, err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
       }
-    );
+    });
   });
 }
 

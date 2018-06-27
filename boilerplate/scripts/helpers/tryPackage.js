@@ -2,8 +2,7 @@ function tryPackage(name) {
   let pkg;
   try {
     pkg = require(name); // eslint-disable-line
-  }
-  catch (e) { }
+  } catch (e) {}
   return pkg;
 }
 

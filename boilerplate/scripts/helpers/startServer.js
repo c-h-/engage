@@ -1,4 +1,4 @@
-const runSequence = require('run-sequence');
+const runSequence = require("run-sequence");
 
 const queuedCallbacks = [];
 let serverStarted = false;
@@ -9,7 +9,7 @@ let serverFinished = false;
  * Once finished starting it calls the callbacks passed in.
  */
 function startServer(callback) {
-  global.settings.platform = 'web'; // switch to web platform
+  global.settings.platform = "web"; // switch to web platform
   global.settings.production = true; // set to production mode
   queuedCallbacks.push(callback);
   if (serverFinished) {
@@ -18,10 +18,11 @@ function startServer(callback) {
   }
   if (!serverStarted) {
     serverStarted = true;
-    runSequence('run', () => { // build and run project
+    runSequence("run", () => {
+      // build and run project
       // server is started
       // now we want to call all callbacks
-      queuedCallbacks.forEach((cb) => {
+      queuedCallbacks.forEach(cb => {
         cb();
       });
       serverFinished = true;
