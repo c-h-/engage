@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Button } from "react-native";
 
-class Home extends React.Component {
+export default class Home extends React.Component {
   static navigationOptions = {
     title: "Home"
   };
@@ -15,5 +15,3 @@ class Home extends React.Component {
     );
   }
 }
-
-export default Home;
