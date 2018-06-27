@@ -1,16 +1,14 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text } from "react-native";
 
 class Home extends React.Component {
   static navigationOptions = {
-    title: "Home"
+    title: "FirstLaunch"
   };
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Home Scene</Text>
-        <Button onPress={() => navigate("FirstLaunch")} title="FirstLaunch" />
+        <Text>FirstLaunch</Text>
       </View>
     );
   }
