@@ -1,12 +1,12 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { getStore } from "./redux/store";
-import Navigator from "./navigation/Navigator";
+import LaunchFlow from "./navigation/LaunchFlow";
 
 const ClientApp = () => {
   return (
     <Provider store={getStore()}>
-      <Navigator />
+      <LaunchFlow />
     </Provider>
   );
 };

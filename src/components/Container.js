@@ -1,11 +1,12 @@
 import React from "react";
+import { SafeAreaView } from "react-native";
+import { colors } from "../theme";
 
-import styled from "styled-components/primitives";
-
-export default styled.View`
-  flex-grow: 1;
-  align-items: center;
-  justify-content: space-around;
-  padding: 20px;
-  height: ${props => (props.height ? props.height : "auto")};
-`;
+export default props => {
+  return (
+    <SafeAreaView
+      style={{ backgroundColor: colors.background, flexGrow: 1, flex: 1 }}
+      {...props}
+    />
+  );
+};
