@@ -56,10 +56,41 @@ export function getBirdData(method, options) {
     query: {
       latitude: 34.008338,
       longitude: -118.481099,
-      radius: 3459.942724306729
+      radius: 3459.942724306729 // m?
     }
   };
   return (dispatch, getState) => {
     processCache({ dispatch, getState }, method, configuredOptions);
+  };
+}
+
+/**
+ * Persists the current map region to redux state and fetches fresh data
+ * @param {Object} region - The region the map has been set to
+ */
+export function setMapLocation(region) {
+  // need region data converted from deltas to radius
+  // https://stackoverflow.com/questions/23117989/get-the-max-latitude-and-longitude-given-radius-meters-and-position
+  const radiusInM =
+    region.longitudeDelta *
+    111.32 *
+    Math.cos((region.latitude / 180.0) * Math.PI) *
+    1000;
+
+  const options = {
+    query: {
+      latitude: region.latitude,
+      longitude: region.longitude,
+      radius: radiusInM
+    }
+  };
+
+  return (dispatch, getState) => {
+    dispatch(getBirdData(apiEndpoints.areaNearby, options));
+    dispatch(getBirdData(apiEndpoints.birdNearby, options));
+    dispatch({
+      type: actionTypes.SET_MAP_LOCATION,
+      payload: { region }
+    });
   };
 }

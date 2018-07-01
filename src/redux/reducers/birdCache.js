@@ -12,7 +12,18 @@ const initState = {
 export default function birdCache(state = initState, action) {
   switch (action.type) {
     case ActionTypes.RECEIVE_BIRD_API: {
-      const timeout = generateCacheTTL();
+      let duration = 600000; // default TTL is 10 min in ms
+      switch (action.payload.method) {
+        case "areaNearby": {
+          duration = 1800000; // 30 min
+          break;
+        }
+        case "birdNearby": {
+          duration = 120000; // 2 min
+          break;
+        }
+      }
+      const timeout = generateCacheTTL(duration);
       return {
         ...state,
         cacheTTLs: {
