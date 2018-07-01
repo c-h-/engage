@@ -1,12 +1,13 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { connect } from "react-redux";
 import styled from "styled-components/primitives";
 import MapView from "../components/MapView";
 import Button from "../components/Button";
 import Container from "../components/Container";
 import Bar from "../components/Bar";
 import { colors } from "../theme";
-import Bird from "../network/Bird";
+import { getBirdData, apiEndpoints } from "../redux/actions";
 
 const { Marker, Polygon } = MapView;
 
@@ -47,7 +48,7 @@ const Spacer = styled.View`
   opacity: 0;
 `;
 
-export default class HomeMap extends React.Component {
+class HomeMap extends React.Component {
   static renderPolygons(shapeData) {
     const renderedShapes = [];
     if (Polygon && Array.isArray(shapeData)) {
@@ -71,12 +72,23 @@ export default class HomeMap extends React.Component {
     }
     return renderedShapes;
   }
+  componentDidMount() {
+    this.refreshData();
+  }
+  componentDidUpdate() {
+    this.refreshData();
+  }
+  refreshData = () => {
+    const { dispatch } = this.props;
+    dispatch(getBirdData(apiEndpoints.areaNearby));
+    dispatch(getBirdData(apiEndpoints.birdNearby));
+  };
   onPress = () => {
     const { navigate } = this.props.navigation;
     navigate("GetLocation");
   };
   render() {
-    console.log("Bird response", Bird.exampleResponses);
+    const { areaNearby } = this.props.data;
     return (
       <Container>
         <Button>How to Ride</Button>
@@ -91,10 +103,13 @@ export default class HomeMap extends React.Component {
             }}
           >
             <Marker
-              coordinate={{ latitude: 34.008338, longitude: -118.481099 }}
+              coordinate={{
+                latitude: 34.008338,
+                longitude: -118.481099
+              }}
               title="Bird Scooter - 51% Battery"
             />
-            {HomeMap.renderPolygons(Bird.exampleResponses[0])}
+            {HomeMap.renderPolygons(areaNearby)}
           </MapView>
           <Bar position={"bottom"}>
             <LocateMe>
@@ -112,3 +127,11 @@ export default class HomeMap extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  console.log(state);
+  return {
+    data: state.birdCurrent || {}
+  };
+}
+export default connect(mapStateToProps)(HomeMap);

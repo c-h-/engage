@@ -1,6 +1,7 @@
 import { Platform } from "react-native";
 import { createStore, applyMiddleware, compose } from "redux";
 import { persistStore, autoRehydrate } from "redux-persist";
+import { cacheEnhancer } from "redux-cache";
 
 import thunkMiddleware from "redux-thunk";
 import loggerMiddleware from "./middlewares/logger";
@@ -12,7 +13,7 @@ import ActionTypes from "./action_types.json";
 const persistConfig = {
   keyPrefix: "app:",
   // don't restore data from these reducers
-  blacklist: ["transient", "nav"]
+  blacklist: ["transient"]
 };
 if (Platform.OS !== "web") {
   persistConfig.storage = storageEngine;
@@ -28,7 +29,8 @@ export function generateStore(initialState, hydrate = true) {
   // conditionally add args to store
   const args = [
     hydrate ? autoRehydrate() : null,
-    applyMiddleware(thunkMiddleware, loggerMiddleware)
+    applyMiddleware(thunkMiddleware, loggerMiddleware),
+    cacheEnhancer()
   ].filter(arg => arg !== null);
 
   // create the store
